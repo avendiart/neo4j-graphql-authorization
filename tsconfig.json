@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "esnext",
+    "module": "nodenext",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "declarationMap": true,
+    "inlineSourceMap": true,
+    "outDir": "dist"
+  }
+}

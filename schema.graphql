@@ -1,0 +1,332 @@
+type Query {
+  users(where: UserWhere, options: UserOptions): [User!]!
+  usersConnection(first: Int, after: String, where: UserWhere, sort: [UserSort]): UsersConnection!
+  usersAggregate(where: UserWhere): UserAggregateSelection!
+  posts(where: PostWhere, options: PostOptions): [Post!]!
+  postsConnection(first: Int, after: String, where: PostWhere, sort: [PostSort]): PostsConnection!
+  postsAggregate(where: PostWhere): PostAggregateSelection!
+}
+
+type Mutation {
+  createUsers(input: [UserCreateInput!]!): CreateUsersMutationResponse!
+  deleteUsers(where: UserWhere): DeleteInfo!
+  updateUsers(where: UserWhere, update: UserUpdateInput): UpdateUsersMutationResponse!
+  createPosts(input: [PostCreateInput!]!): CreatePostsMutationResponse!
+  deletePosts(where: PostWhere, delete: PostDeleteInput): DeleteInfo!
+  updatePosts(where: PostWhere, update: PostUpdateInput, connect: PostConnectInput, disconnect: PostDisconnectInput, create: PostRelationInput, delete: PostDeleteInput): UpdatePostsMutationResponse!
+}
+
+"""An enum for sorting in either ascending or descending order."""
+enum SortDirection {
+  """Sort by field values in ascending order."""
+  ASC
+
+  """Sort by field values in descending order."""
+  DESC
+}
+
+"""
+Information about the number of nodes and relationships created during a create mutation
+"""
+type CreateInfo {
+  nodesCreated: Int!
+  relationshipsCreated: Int!
+}
+
+type CreatePostsMutationResponse {
+  info: CreateInfo!
+  posts: [Post!]!
+}
+
+type CreateUsersMutationResponse {
+  info: CreateInfo!
+  users: [User!]!
+}
+
+"""
+Information about the number of nodes and relationships deleted during a delete mutation
+"""
+type DeleteInfo {
+  nodesDeleted: Int!
+  relationshipsDeleted: Int!
+}
+
+type IDAggregateSelection {
+  shortest: ID
+  longest: ID
+}
+
+"""Pagination information (Relay)"""
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Post {
+  title: String!
+  content: String!
+  authorAggregate(where: UserWhere, directed: Boolean = true): PostUserAuthorAggregationSelection
+  author(where: UserWhere, options: UserOptions, directed: Boolean = true): User!
+  authorConnection(where: PostAuthorConnectionWhere, first: Int, after: String, directed: Boolean = true, sort: [PostAuthorConnectionSort!]): PostAuthorConnection!
+}
+
+type PostAggregateSelection {
+  count: Int!
+  title: StringAggregateSelection!
+  content: StringAggregateSelection!
+}
+
+type PostAuthorConnection {
+  edges: [PostAuthorRelationship!]!
+  totalCount: Int!
+  pageInfo: PageInfo!
+}
+
+type PostAuthorRelationship {
+  cursor: String!
+  node: User!
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
+type PostsConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [PostEdge!]!
+}
+
+type PostUserAuthorAggregationSelection {
+  count: Int!
+  node: PostUserAuthorNodeAggregateSelection
+}
+
+type PostUserAuthorNodeAggregateSelection {
+  id: IDAggregateSelection!
+}
+
+type StringAggregateSelection {
+  shortest: String
+  longest: String
+}
+
+"""
+Information about the number of nodes and relationships created and deleted during an update mutation
+"""
+type UpdateInfo {
+  nodesCreated: Int!
+  nodesDeleted: Int!
+  relationshipsCreated: Int!
+  relationshipsDeleted: Int!
+}
+
+type UpdatePostsMutationResponse {
+  info: UpdateInfo!
+  posts: [Post!]!
+}
+
+type UpdateUsersMutationResponse {
+  info: UpdateInfo!
+  users: [User!]!
+}
+
+type User {
+  id: ID!
+}
+
+type UserAggregateSelection {
+  count: Int!
+  id: IDAggregateSelection!
+}
+
+type UserEdge {
+  cursor: String!
+  node: User!
+}
+
+type UsersConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [UserEdge!]!
+}
+
+input PostAuthorAggregateInput {
+  count: Int
+  count_LT: Int
+  count_LTE: Int
+  count_GT: Int
+  count_GTE: Int
+  AND: [PostAuthorAggregateInput!]
+  OR: [PostAuthorAggregateInput!]
+  NOT: PostAuthorAggregateInput
+  node: PostAuthorNodeAggregationWhereInput
+}
+
+input PostAuthorConnectFieldInput {
+  where: UserConnectWhere
+
+  """
+  Whether or not to overwrite any matching relationship with the new properties.
+  """
+  overwrite: Boolean! = true
+}
+
+input PostAuthorConnectionSort {
+  node: UserSort
+}
+
+input PostAuthorConnectionWhere {
+  AND: [PostAuthorConnectionWhere!]
+  OR: [PostAuthorConnectionWhere!]
+  NOT: PostAuthorConnectionWhere
+  node: UserWhere
+}
+
+input PostAuthorCreateFieldInput {
+  node: UserCreateInput!
+}
+
+input PostAuthorDeleteFieldInput {
+  where: PostAuthorConnectionWhere
+}
+
+input PostAuthorDisconnectFieldInput {
+  where: PostAuthorConnectionWhere
+}
+
+input PostAuthorFieldInput {
+  connect: PostAuthorConnectFieldInput
+  create: PostAuthorCreateFieldInput
+}
+
+input PostAuthorNodeAggregationWhereInput {
+  AND: [PostAuthorNodeAggregationWhereInput!]
+  OR: [PostAuthorNodeAggregationWhereInput!]
+  NOT: PostAuthorNodeAggregationWhereInput
+}
+
+input PostAuthorUpdateConnectionInput {
+  node: UserUpdateInput
+}
+
+input PostAuthorUpdateFieldInput {
+  where: PostAuthorConnectionWhere
+  connect: PostAuthorConnectFieldInput
+  disconnect: PostAuthorDisconnectFieldInput
+  create: PostAuthorCreateFieldInput
+  update: PostAuthorUpdateConnectionInput
+  delete: PostAuthorDeleteFieldInput
+}
+
+input PostConnectInput {
+  author: PostAuthorConnectFieldInput
+}
+
+input PostCreateInput {
+  title: String!
+  content: String!
+  author: PostAuthorFieldInput
+}
+
+input PostDeleteInput {
+  author: PostAuthorDeleteFieldInput
+}
+
+input PostDisconnectInput {
+  author: PostAuthorDisconnectFieldInput
+}
+
+input PostOptions {
+  limit: Int
+  offset: Int
+
+  """
+  Specify one or more PostSort objects to sort Posts by. The sorts will be applied in the order in which they are arranged in the array.
+  """
+  sort: [PostSort!]
+}
+
+input PostRelationInput {
+  author: PostAuthorCreateFieldInput
+}
+
+"""
+Fields to sort Posts by. The order in which sorts are applied is not guaranteed when specifying many fields in one PostSort object.
+"""
+input PostSort {
+  title: SortDirection
+  content: SortDirection
+}
+
+input PostUpdateInput {
+  title: String
+  content: String
+  author: PostAuthorUpdateFieldInput
+}
+
+input PostWhere {
+  title: String
+  title_IN: [String!]
+  title_CONTAINS: String
+  title_STARTS_WITH: String
+  title_ENDS_WITH: String
+  content: String
+  content_IN: [String!]
+  content_CONTAINS: String
+  content_STARTS_WITH: String
+  content_ENDS_WITH: String
+  OR: [PostWhere!]
+  AND: [PostWhere!]
+  NOT: PostWhere
+  authorAggregate: PostAuthorAggregateInput
+}
+
+input UserConnectWhere {
+  node: UserWhere!
+}
+
+input UserCreateInput {
+  """
+  Appears because this input type would be empty otherwise because this type is composed of just generated and/or relationship properties. See https://neo4j.com/docs/graphql-manual/current/troubleshooting/faqs/
+  """
+  _emptyInput: Boolean
+}
+
+input UserOptions {
+  limit: Int
+  offset: Int
+
+  """
+  Specify one or more UserSort objects to sort Users by. The sorts will be applied in the order in which they are arranged in the array.
+  """
+  sort: [UserSort!]
+}
+
+"""
+Fields to sort Users by. The order in which sorts are applied is not guaranteed when specifying many fields in one UserSort object.
+"""
+input UserSort {
+  id: SortDirection
+}
+
+input UserUpdateInput {
+  """
+  Appears because this input type would be empty otherwise because this type is composed of just generated and/or relationship properties. See https://neo4j.com/docs/graphql-manual/current/troubleshooting/faqs/
+  """
+  _emptyInput: Boolean
+}
+
+input UserWhere {
+  id: ID
+  id_IN: [ID!]
+  id_CONTAINS: ID
+  id_STARTS_WITH: ID
+  id_ENDS_WITH: ID
+  OR: [UserWhere!]
+  AND: [UserWhere!]
+  NOT: UserWhere
+}
